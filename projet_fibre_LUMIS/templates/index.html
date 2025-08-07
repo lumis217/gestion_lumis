@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Accueil - Gestion Fibre Optique{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center" style="font-size: 2.5rem;">Bienvenue sur l'application Lumis</h2>
+
+<h2 class="mb-4 text-center">Projets du mois : {{ mois_courant }}</h2>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="/?mois={{ mois_prec }}" class="btn btn-outline-primary">&laquo; Mois précédent</a>
+    <a href="/export_excel?mois={{ request.args.get('mois', '') }}" class="btn btn-success">📊 Exporter Excel</a>
+    <a href="/?mois={{ mois_suiv }}" class="btn btn-outline-primary">Mois suivant &raquo;</a>
+</div>
+
+<a href="/ajouter" class="btn btn-primary mb-3">➕ Ajouter un projet</a>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark text-center">
+    <tr>
+        <th>Client</th>
+        <th>Tâche</th>
+        <th>Projet</th>
+        <th>Date réception</th>
+        <th>Réalisateur</th>
+        <th>État</th>
+        <th>Date envoi</th>
+        <th>Actions</th>
+    </tr>
+</thead>    <tbody>
+        {% for projet in projets %}
+        <tr>
+            <td>{{ projet.client }}</td>
+            <td>{{ projet.tache }}</td>
+            <td>{{ projet.projet }}</td>
+            <td>{{ projet.date_reception }}</td>
+            <td 
+                {% if projet.realisateur == "Yassine" %}
+                    style="background-color:#df6ecd; color:black; font-weight:bold; text-align:center;"
+                {% elif projet.realisateur == "Omar" %}
+                    style="background-color:#83c876; color:black; font-weight:bold; text-align:center;"
+                {% elif projet.realisateur == "Mohammed" %}
+                    style="background-color:#a9afc1; color:black; font-weight:bold; text-align:center;"
+                {% elif projet.realisateur == "Rajae" %}
+                    style="background-color:#ffe5a0; color:black; font-weight:bold; text-align:center;"
+                {% elif projet.realisateur == "Oumaima" %}
+                    style="background-color:#ffcfc9; color:black; font-weight:bold; text-align:center;"
+                {% else %}
+                    style="background-color:#ddd; color:black; font-weight:bold; text-align:center;"
+                {% endif %}
+            >   
+                {{ projet.realisateur }}
+            </td>
+
+            </td>
+            <td 
+                {% if projet.etat == "À faire" %}
+                    style="background-color:#fff700; color:#000000; font-weight:bold; text-align:center;"
+                {% elif projet.etat == "En cours" %}
+                    style="background-color:#00bfff; color:#000000; font-weight:bold; text-align:center;"
+                {% elif projet.etat == "Faite" %}
+                    style="background-color:#00ff00; color:#000000; font-weight:bold; text-align:center;"
+                {% elif projet.etat == "Bloqué" %}
+                    style="background-color:#ff0000; color:#000000; font-weight:bold; text-align:center;"
+                {% else %}
+                    style="background-color:#e2e3e5; color:#000000; font-weight:bold; text-align:center;"
+                {% endif %}
+            >
+                {{ projet.etat }}
+            </td>
+
+            <td>{{ projet.date_envoi }}</td>
+            <td>
+                <a href="/modifier/{{ loop.index0 }}" class="btn btn-outline-success">Modifier</a>
+                <a href="/supprimer/{{ loop.index0 }}" class="btn btn-outline-secondary" onclick="return confirm('Supprimer ce projet ?');">Supprimer</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="8" class="text-center">Aucun projet trouvé.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
